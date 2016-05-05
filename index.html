@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="soonkarnpimApp">
+<head>
+    <meta charset="UTF-8">
+    <title>MY APP</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="bower_components/angularPrint/angularPrint.css">
+    <link rel="stylesheet" href="bower_components/ui-select/dist/select.min.css">
+    <link rel="stylesheet" href="css/print.css">
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angularPrint/angularPrint.js"></script>
+    <script src="bower_components/ui-select/dist/select.min.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+
+    <script src="services/customer.js"></script>
+
+    <script src="controllers/customer.js"></script>
+    <script src="controllers/quotation.js"></script>
+    <script src="controllers/quotation-add.js"></script>
+    <script src="controllers/quotation-print.js"></script>
+    
+    <script src="app_route.js"></script>
+</head>
+<body print-section>
+    <div class="container">
+        <div print-remove class="page-header">
+            <ul class="nav nav-pills">
+                <li ui-sref-active="active"><a ui-sref="customer">C u s t o m e r</a></li>
+                <li ui-sref-active="active"><a ui-sref="quotation">Q u o t a t i o n</a></li>
+            </ul>
+        </div>
+  
+        <div class="col-sm-12">
+            <div ui-view></div>
+        </div>
+        <div print-remove class="col-xs-12" style="border-top: 1px solid #ddd; padding-top:10px; margin-top:20px;">
+            <p style="color: #ddd" class="pull-right">Soonkarnpim Web Application by nopwan n napon</p>
+        </div>
+    </div>
+</body>
+</html>

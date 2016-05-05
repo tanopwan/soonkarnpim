@@ -1,0 +1,16 @@
+<div print-remove class="col-sm-4">
+
+    <div class="list-group-item text-success">
+	   ใบเสนอราคา
+		<a class="new pull-right" ui-sref="quotation.add">+</a>
+	</div>
+    <div class="list-group-item" ng-repeat="quotation in quotations">
+        <a ui-sref="quotation.view({key: quotation._id})">{{quotation.job_name}}</a>
+        <div class="pull-right">
+            <a ui-sref="quotation.edit({key: quotation._id})"><span class="glyphicon glyphicon-pencil"></a>
+        </div>
+    </div>
+
+</div>
+
+<div class="col-sm-8" ui-view></div>

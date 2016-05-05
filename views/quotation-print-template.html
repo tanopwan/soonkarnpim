@@ -1,0 +1,287 @@
+
+<div print-remove class="page-header">
+    <button print-btn class="btn btn-success pull-right"><span class="glyphicon glyphicon-print"></button>
+    <div class="btn-group">
+        <label class="btn btn-primary" ng-model="sum_mode" uib-btn-radio="'none'">ไม่แสดงราคารวม</label>
+        <label class="btn btn-primary" ng-model="sum_mode" uib-btn-radio="'auto'" ng-disabled="enableAutosum">รวมราคางานย่อย</label>
+        <label class="btn btn-primary" ng-model="sum_mode" uib-btn-radio="'input'" ng-disabled="enableSubprices0">ใช้ราคาหลักจากใบเสนอราคา</label>
+    </div>
+    <div class="btn-group">
+        <label class="btn btn-primary" ng-model="vat_mode" uib-btn-radio="'vat'">vat</label>
+        <label class="btn btn-primary" ng-model="vat_mode" uib-btn-radio="'no_vat'">no vat</label>
+    </div>
+</div>
+<div style="margin-top: 20px;">
+    <div class="container-xs-height">
+        <div class="row row-xs-height">
+            <div class="col-xs-3 text-center col-xs-height col-middle">
+                <img src="/resources/logo.jpg" class="img-thumbnail"><br>
+                เลขประจำตัวผู้เสียภาษี 0105535121362
+            </div>
+            <div class="col-xs-9 col-xs-height">
+                <p><h4>บริษัท ศูนย์การพิมพ์อาคเนย์ จำกัด (สำนักงานใหญ่)</h4></p>
+                <p>37 ซอยพุทธบูชา4 ถนนพุทธบูชา แขวงบางมด เขตจอมทอง กรุงเทพ 10150
+                <br>37 Phuthabucha 4, Phuthabucha rd., Bang-Mod, Jomthong, Bangkok, 10150
+                <br>Tel: 0 - 2 8 7 4 - 1 3 2 2 - 4, Fax: 0 - 2 8 7 4 - 1 3 2 5</p>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-12 nopadding">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    ใบเสนอราคา
+                                    <div class="pull-right">
+                                        วันที่ {{date_string}}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-right">
+                                เลขที่ {{quotation.number}}
+                            </div>
+                            <p><b>ลูกค้า</b> <span ng-bind="customer.name"></span></p>
+                            <p><b>ที่อยู่</b> <span ng-bind="customer.add1"></span><br> 
+                            <span ng-bind="customer.add2"></span><span print-hide>.</span></p>
+                            <span ng-if="customer.contact"><p><b>เบอร์โทรติดต่อ</b> <span ng-bind="customer.contact"></span><br></p></span>
+                            <p><b>เลขประจำตัวผู้เสียภาษี</b> <span ng-bind="customer.corp_id"></span><br></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 container-xs-height">
+            <div class="row row-xs-height">
+                <div class="col-xs-1 col-xs-height text-center addtopborder addleftborder">
+                    ลำดับ
+                </div>
+                <div class="col-xs-5 col-xs-height text-center addtopborder addleftborder">
+                    รายการ
+                </div>
+                <div class="col-xs-2 col-xs-height text-center addtopborder addleftborder">
+                    จำนวน
+                </div>
+                <div class="col-xs-2 col-xs-height text-center addtopborder addleftborder">
+                    ราคาต่อหน่วย
+                </div>
+                <div class="col-xs-2 col-xs-height text-center addtopborder addleftborder addrightborder">
+                    ราคา
+                </div>
+            </div>
+            <div class="row row-xs-height" name="Line1_job_name">
+                <div class="col-xs-1 col-xs-height text-center addtopborder addleftborder"></div>
+                <div class="col-xs-5 col-xs-height addtopborder addleftborder">
+                    <div class="row">
+                        <div class="col-xs-12" ng-bind="quotation.job_name"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12" ng-bind="quotation.job_size"></div>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder addtopborder">
+                    <div class="row row-xs-height" ng-repeat="price in quotation.sub_prices" ng-if="!hasSubPrices(price)">
+                        <div class="col-xs-12 col-xs-height"></div>
+                        <span class="pull-right">{{price.quantity}}</span>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder addtopborder">
+                   <div class="row row-xs-height" ng-repeat="price in quotation.sub_prices" ng-if="!hasSubPrices(price)">
+                        <div class="col-xs-12 col-xs-height"></div>
+                        <span class="pull-right" ng-if="price.each_show">{{price.each_baht_str}}.{{price.each_satang}}</span>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder addrightborder addtopborder">
+                   <div class="row row-xs-height" ng-repeat="price in quotation.sub_prices" ng-if="!hasSubPrices(price)"> 
+                        <div class="col-xs-12 col-xs-height"></div>
+                        <span class="pull-right" ng-if="price.total_show">{{price.total_baht_str}}.{{price.total_satang}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row row-xs-height" name="Line2_papers" ng-repeat="paper in quotation.papers" ng-if="!hasSubJobs(paper)">
+                <div class="col-xs-1 col-xs-height addleftborder">
+                </div>
+                <div class="col-xs-5 col-xs-height addleftborder">
+                    <div class="row" ng-if="paper.type">
+                        <div class="col-xs-12">กระดาษ : {{paper.type}}
+                        <span ng-if="paper.gram">{{paper.gram}} แกรม</span></div>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder">
+                    <div class="col-xs-8 addrightborder"></div>
+                    <div class="col-xs-4"></div>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder addrightborder"></div>
+            </div>
+            <div class="row row-xs-height" name="Line3_prints" ng-repeat="print in quotation.prints" ng-if="!hasSubJobs(print)">
+                <div class="col-xs-1 col-xs-height addleftborder">
+                </div>
+                <div class="col-xs-5 col-xs-height addleftborder">
+                    <div class="row" ng-if="print.color">
+                        <div class="col-xs-12">พิมพ์ : {{print.color}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder addrightborder"></div>
+            </div>
+            <div class="row row-xs-height" name="Line4_sub_jobs" ng-repeat="sub_job in quotation.sub_jobs">
+                <div class="col-xs-1 col-xs-height addleftborder"><div class="row"><center>{{$index + 1}}</center></div></div>
+                <div class="col-xs-5 col-xs-height addleftborder">
+                    <div class="row" ng-if="sub_job.name != null">
+                        <div class="col-xs-6" ng-if="sub_job.name != ''">{{sub_job.name}}</div>
+                    </div>
+                    <div class="row row-xs-height" ng-if="sub_job.size">
+                        <div class="col-xs-12">ขนาด {{sub_job.size}}</span></div>
+                    </div>
+                    <div class="row row-xs-height" ng-repeat="paper in quotation.papers" ng-if="paper.sub_jobs.indexOf(sub_job.name) > 0">
+                        <div class="col-xs-12">กระดาษ : {{paper.type}}
+                        <span ng-if="paper.gram">{{paper.gram}} แกรม</span></div>
+                    </div>
+                    <div class="row row-xs-height" ng-repeat="print in quotation.prints" ng-if="print.sub_jobs.indexOf(sub_job.name) > 0">
+                        <div class="col-xs-12">พิมพ์ : {{print.color}}</div>
+                    </div>
+                    <div class="row row-xs-height" ng-repeat="coat in quotation.coats" ng-if="coat.sub_jobs.indexOf(sub_job.name) > 0">
+                        <div class="col-xs-12">เคลือบ : {{coat.type}}</div>
+                    </div>
+                    <div class="row row-xs-height" ng-repeat="diecut in quotation.diecuts" ng-if="diecut.sub_jobs.indexOf(sub_job.name) > 0">
+                        <div class="col-xs-12">ปั๊ม : {{diecut.type}}</div>
+                    </div>
+                    <div class="row row-xs-height" ng-repeat="fold in quotation.folds" ng-if="fold.sub_jobs.indexOf(sub_job.name) > 0">
+                        <div class="col-xs-12">พับ : {{fold.type}}</div>
+                    </div>
+                    <div class="row row-xs-height" ng-repeat="bind in quotation.binds" ng-if="bind.sub_jobs.indexOf(sub_job.name) > 0">
+                        <div class="col-xs-12">เข้าเล่ม : {{bind.type}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder">
+                    <span class="pull-right">{{sub_job.quantity}}</span>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder">
+                    <span class="pull-right" ng-if="sub_job.each_show">{{sub_job.each_baht_str}}.{{sub_job.each_satang}}</span>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder addrightborder">
+                    <span class="pull-right" ng-if="sub_job.total_show">{{sub_job.total_baht_str}}.{{sub_job.total_satang}}</span>
+                </div>
+            </div>
+            <div class="row row-xs-height" name="Line5_coats" ng-repeat="coat in quotation.coats" ng-if="!hasSubJobs(coat)">
+                <div class="col-xs-1 col-xs-height addleftborder">
+                    {{coat.sub_jobs.toArray}}
+                </div>
+                <div class="col-xs-5 col-xs-height addleftborder">
+                    <div class="row" ng-if="coat.type">
+                        <div class="col-xs-8">เคลือบ : {{coat.type}}</div>
+                        <div class="col-xs-4" ng-if="coat.page">
+                            <div class="pull-right">{{coat.page}} หน้า</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder addrightborder" ></div>
+            </div>
+            <div class="row row-xs-height" name="Line6_diecuts" ng-repeat="diecut in quotation.diecuts" ng-if="!hasSubJobs(diecut)">
+                <div class="col-xs-1 col-xs-height addleftborder">
+                </div>
+                <div class="col-xs-5 col-xs-height addleftborder ">
+                    <div class="row" ng-if="diecut.type">
+                        <div class="col-xs-6">ปั๊ม : {{diecut.type}}</div>
+                        <div class="col-xs-6" ng-if="diecut.size">
+                            <div class="pull-right">{{diecut.size}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder"></div>                    <div class="col-xs-2 col-xs-height addleftborder addrightborder"></div>
+            </div>
+            <div class="row row-xs-height" name="Line7_foldings" ng-repeat="folding in quotation.folds" ng-if="!hasSubJobs(folding)">
+                <div class="col-xs-1 col-xs-height addleftborder">
+                </div>
+                <div class="col-xs-5 col-xs-height addleftborder">
+                    <div class="row" ng-if="folding.type">
+                        <div class="col-xs-6">พับ : {{folding.type}}</div>
+                        <div class="col-xs-6" ng-if="folding.part">{{folding.part}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder "></div>
+                <div class="col-xs-2 col-xs-height addleftborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder addrightborder"></div>
+            </div>
+            <div class="row row-xs-height" name="Line8_bindings" ng-repeat="binding in quotation.binds" ng-if="!hasSubJobs(binding)">
+                <div class="col-xs-1 col-xs-height addleftborder">
+                </div>
+                <div class="col-xs-5 col-xs-height addleftborder">
+                    <div class="row" ng-if="binding.type">
+                        <div class="col-xs-6">เข้าเล่ม : {{binding.type}}</div>
+                        <div class="col-xs-6" ng-if="binding.description">{{binding.description}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-xs-height addleftborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder addrightborder"></div>
+            </div>
+            <div class="row row-xs-height" name="ending">
+                <div class="col-xs-1 col-xs-height addleftborder addbottomborder"></div>
+                <div class="col-xs-5 col-xs-height addleftborder addbottomborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder addbottomborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder addbottomborder"></div>
+                <div class="col-xs-2 col-xs-height addleftborder addrightborder addbottomborder"></div>
+            </div>
+        </div>
+
+        <div class="col-xs-7">
+            <p>หมายเหตุ</p>
+            *{{quotation.term}}<br>
+            <span ng-if="quotation.time">**ระยะเวลาการผลิต {{quotation.time}}</span><br>
+            <span ng-if="customer.payment">**{{customer.payment}}</span>
+        </div>
+        <div class="col-xs-5">
+            <div class="row">
+                <div class="col-xs-7 text-center addbottomborder addleftborder">
+                    รวมราคาค่าบริการ
+                </div>
+                <div class="col-xs-5 text-right addbottomborder addleftborder addrightborder">
+                    {{sub_total_baht}}.{{sub_total_satang}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-7 text-center addbottomborder addleftborder">
+                    ภาษีมูลค่าเพิ่ม
+                </div>
+                <div class="col-xs-5 text-right addbottomborder addleftborder addrightborder">
+                    {{vat_baht}}.{{vat_satang}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-7 text-center addleftborder addbottomborder">
+                    จำนวนเงินรวมทั้งสิ้น
+                </div>
+                <div class="col-xs-5 text-right addleftborder addrightborder addbottomborder">
+                    {{total_baht}}.{{total_satang}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12" style="margin-top:20px">
+        <table class="table table-bordered">
+            <tr>
+                <th class="col-xs-4 text-center">ลูกค้าผู้อนุมัติ</th>
+                <th class="col-xs-4 text-center">ผู้เสนอราคา</th>
+                <th class="col-xs-4 text-center">ผู้เสนอราคา</th>
+            </tr>
+            <tr style="height:100px">
+                <td class="text-center" style="vertical-align:bottom"></td>
+                <td class="text-center" style="vertical-align:bottom">(นางสาว ปวิตรา ว่องพิชิตกุล)<br>ผู้จัดการฝ่ายขาย</td>
+                <td class="text-center" style="vertical-align:bottom">(นาย ชาญชัย ว่องพิชิตกุล)<br>กรรมการผู้จัดการ</td>
+            </tr>
+        </table>
+    </div>
+</div>

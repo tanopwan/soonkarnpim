@@ -1,0 +1,390 @@
+<div>
+	 <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a><center>{{editHeader}}</center></a></li>
+    </ul>
+    <br>
+</div>
+<form class="form-horizontal col-sm-12" action="/quotations" method="POST" id="quotationForm">
+	<div class="col-sm-offset-6 col-sm-6">
+        <p class="input-group">
+         	<input type="text" class="form-control" name="job_date" uib-datepicker-popup="dd/MMMM/yyyy" ng-model="dt" is-open="opened" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats"/>
+          	<span class="input-group-btn">
+            	<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+          	</span>
+          	<input type="hidden" name="month" value="{{month}}"/>
+          	<input type="hidden" name="year" value="{{year}}"/>
+          	<input type="hidden" name="number" value="{{number}}"/>
+        </p>
+    </div>
+    <div class="form-group">
+		<label class="control-label col-sm-2" for="customer">ลูกค้า</label>
+		<div class="col-sm-10">
+			<select class="form-control" name="customer_id" ng-model="quotation.customer_id">
+      			<option ng-repeat="customer in customers" value="{{customer._id}}">{{customer.name}}</option>
+    		</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2" for="job_name">ชื่องาน</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="job_name" ng-model="quotation.job_name">
+		</div>
+	</div>
+	<!--div class="form-group">
+		<label class="control-label col-sm-2" for="pwd">ขนาด</label>
+		<div class="col-sm-4">          
+			<input type="text" class="form-control" name="size" ng-model="quotation.size">
+		</div>
+		<label class="control-label col-sm-2">จำนวน</label>
+		<div class="col-sm-4">          
+			<input type="number" class="form-control" name="quantity" ng-model="quotation.quantity">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">ราคา รวม</label>
+		<div class="col-sm-2">          
+			<input type="number" min="0" class="form-control" placeholder="บาท" name="total_baht" ng-model="quotation.total_baht">
+		</div>
+		<div class="col-sm-2">
+			<input type="number" min="0" class="form-control" placeholder="สต." name="total_satang" ng-model="quotation.total_satang">
+		</div>
+		<label class="control-label col-sm-2">ราคา @</label>
+		<div class="col-sm-2">          
+			<input type="number" min="0" class="form-control" placeholder="บาท" name="each_baht" ng-model="quotation.each_baht">
+		</div>
+		<div class="col-sm-2">
+			<input type="number" min="0" class="form-control" placeholder="สต." name="each_satang" ng-model="quotation.each_satang">
+		</div>
+	</div-->
+	<div class="form-group">
+		<label class="control-label col-sm-2">ขนาด</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="job_size" ng-model="quotation.job_size">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2" for="term">เงื่อนไข</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="term" ng-model="quotation.term">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2" for="time">ระยะเวลาการผลิต</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="time" ng-model="quotation.time">
+		</div>
+	</div>
+
+	<div class="row">
+		<div ng-repeat="sub_price in quotation.sub_prices" class="list-group-item col-sm-offset-2 col-sm-10">
+			<div class="form-group">
+				<div class="col-sm-12">
+					<button type="button" class="close pull-right" ng-click="deleteTab('sub_price', $index)">x</button>
+					<label class="control-label">จำนวน</label>
+					<input type="number" min="0" class="form-control" name="sub_prices[{{$index}}][quantity]" ng-model="quotation.sub_prices[$index].quantity">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2">ราคา รวม</label>
+				<div class="col-sm-5">          
+					<input type="number" min="0" class="form-control" placeholder="บาท" name="sub_prices[{{$index}}][total_baht]" ng-model="quotation.sub_prices[$index].total_baht">
+				</div>
+				<div class="col-sm-5">
+					<input type="number" min="0" class="form-control" placeholder="สต." name="sub_prices[{{$index}}][total_satang]" ng-model="quotation.sub_prices[$index].total_satang">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2">ราคา @</label>
+				<div class="col-sm-5">          
+					<input type="number" min="0" class="form-control" placeholder="บาท" name="sub_prices[{{$index}}][each_baht]" ng-model="quotation.sub_prices[$index].each_baht">
+				</div>
+				<div class="col-sm-5">
+					<input type="number" min="0" class="form-control" placeholder="สต." name="sub_prices[{{$index}}][each_satang]" ng-model="quotation.sub_prices[$index].each_satang">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row col-sm-12" style="padding-top: 15px; padding-bottom: 15px;">
+		<button type="button" class="btn btn-warning pull-right" ng-click="addTab('sub_price')">+ เพิ่มราคา</button>
+	</div>
+
+	<div class="row">
+		<div ng-repeat="sub_job in quotation.sub_jobs" class="list-group-item col-sm-offset-2 col-sm-10">
+			<div class="row">
+				<div class="col-sm-12">
+					<button type="button" class="close pull-right" ng-click="deleteTab('sub_job', $index)">x</button>
+					<label class="control-label">ชื่องานย่อย</label>
+					<input type="text" class="form-control" name="sub_jobs[{{$index}}][name]" ng-model="quotation.sub_jobs[$index].name">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-6">
+					<label class="control-label">ขนาด</label>
+					<input type="text" class="form-control" name="sub_jobs[{{$index}}][size]" ng-model="quotation.sub_jobs[$index].size">
+				</div>
+				<div class="col-sm-6">
+					<label class="control-label">จำนวน</label>
+					<input type="number" min="0" class="form-control" name="sub_jobs[{{$index}}][quantity]" ng-model="quotation.sub_jobs[$index].quantity">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2">ราคา รวม</label>
+				<div class="col-sm-5">          
+					<input type="number" min="0" class="form-control" placeholder="บาท" name="sub_jobs[{{$index}}][total_baht]" ng-model="quotation.sub_jobs[$index].total_baht">
+				</div>
+				<div class="col-sm-5">
+					<input type="number" min="0" class="form-control" placeholder="สต." name="sub_jobs[{{$index}}][total_satang]" ng-model="quotation.sub_jobs[$index].total_satang">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2">ราคา @</label>
+				<div class="col-sm-5">          
+					<input type="number" min="0" class="form-control" placeholder="บาท" name="sub_jobs[{{$index}}][each_baht]" ng-model="quotation.sub_jobs[$index].each_baht">
+				</div>
+				<div class="col-sm-5">
+					<input type="number" min="0" class="form-control" placeholder="สต." name="sub_jobs[{{$index}}][each_satang]" ng-model="quotation.sub_jobs[$index].each_satang">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row col-sm-12" style="padding-top: 15px; padding-bottom: 15px;">
+		<button type="button" class="btn btn-warning pull-right" ng-click="addTab('sub_job')">+ เพิ่มงานย่อย</button>
+	</div>
+
+	<div class="row">
+		<div ng-repeat="paper in quotation.papers" class="list-group-item col-sm-offset-2 col-sm-10">
+			<div class="row">
+				<div class="col-sm-8">
+					<label class="control-label">งานย่อย</label>
+					<input type="hidden" name="papers[{{$index}}][sub_jobs]" value="{{quotation.papers[$index].sub_jobs}}"></input>
+		    		<ui-select multiple ng-model="quotation.papers[$index].sub_jobs" close-on-select="false">
+					    <ui-select-match placeholder="เลือกงานย่อย">{{$item.name}}</ui-select-match>
+					    <ui-select-choices repeat="sub_job.name as sub_job in quotation.sub_jobs">
+					    	{{sub_job.name}}
+					    </ui-select-choices>
+					</ui-select>
+				</div>
+				<div class="col-sm-4">
+					<button type="button" class="close pull-right" ng-click="deleteTab('paper', $index)">x</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<label class="control-label">ขนาด</label>
+					<input type="text" class="form-control" name="papers[{{$index}}][size]" ng-model="quotation.papers[$index].size">
+				</div>
+				<div class="col-sm-4">
+					<label class="control-label">แกรม</label>
+					<input type="number" min="0" class="form-control" name="papers[{{$index}}][gram]" ng-model="quotation.papers[$index].gram">
+				</div>
+				<div class="col-sm-4">
+					<!--input type="text" class="form-control" name="papers[{{$index}}][type]" ng-model="quotation.papers[$index].type"-->
+  					<label class="control-label">ชนิด</label>
+  					<select class="form-control" name="papers[{{$index}}][type]" ng-model="quotation.papers[$index].type">
+    					<option ng-repeat="paperType in paperTypes">{{paperType}}</option>
+  					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row col-sm-12" style="padding-top: 15px; padding-bottom: 15px;">
+		<button type="button" class="btn btn-warning pull-right" ng-click="addTab('paper')">+ เพิ่มกระดาษ</button>
+	</div>
+
+	<div class="row">
+		<div ng-repeat="print in quotation.prints" class="list-group-item col-sm-offset-2 col-sm-10">
+			<div class="row">
+				<div class="col-sm-8">
+					<label class="control-label">งานย่อย</label>
+					<input type="hidden" name="prints[{{$index}}][sub_jobs]" value="{{quotation.prints[$index].sub_jobs}}"></input>
+		    		<ui-select multiple ng-model="quotation.prints[$index].sub_jobs" close-on-select="false">
+					    <ui-select-match placeholder="เลือกงานย่อย">{{$item.name}}</ui-select-match>
+					    <ui-select-choices repeat="sub_job.name as sub_job in quotation.sub_jobs">
+					    	{{sub_job.name}}
+					    </ui-select-choices>
+					</ui-select>
+				</div>
+				<div class="col-sm-4">
+					<button type="button" class="close pull-right" ng-click="deleteTab('print', $index)">x</button>
+					<label class="control-label">ตัด {{quotation.prints[$index].cut}}</label><br>
+					<input type="hidden" class="form-control" name="prints[{{$index}}][cut]" value="{{quotation.prints[$index].cut}}">
+					<button type="button" class="btn btn-success" ng-click="quotation.prints[$index].cut = 2">2</button>
+					<button type="button" class="btn btn-success" ng-click="quotation.prints[$index].cut = 4">4</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<label class="control-label">สี</label>
+					<input type="text" class="form-control" name="prints[{{$index}}][color]" ng-model="quotation.prints[$index].color">
+				</div>
+				<div class="col-sm-4">
+					<label class="control-label">กรอบ</label>
+					<input type="number" min="0" class="form-control" name="prints[{{$index}}][plate]" ng-model="quotation.prints[$index].plate">
+				</div>
+				<div class="col-sm-4">
+					<label class="control-label">ยก</label>
+					<input type="number" min="0" class="form-control" name="prints[{{$index}}][set]" ng-model="quotation.prints[$index].set">
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<div class="row col-sm-12" style="padding-top: 15px; padding-bottom: 15px;">
+		<button type="button" class="btn btn-warning pull-right" ng-click="addTab('print')">+ เพิ่มพิมพ์</button>
+	</div>
+
+	<div class="row">
+		<div ng-repeat="coat in quotation.coats" class="list-group-item col-sm-offset-2 col-sm-10">
+			<div class="row">
+				<div class="col-sm-8">
+					<label class="control-label">งานย่อย</label>
+					<input type="hidden" name="coats[{{$index}}][sub_jobs]" value="{{quotation.coats[$index].sub_jobs}}"></input>
+		    		<ui-select multiple ng-model="quotation.coats[$index].sub_jobs" close-on-select="false">
+					    <ui-select-match placeholder="เลือกงานย่อย">{{$item.name}}</ui-select-match>
+					    <ui-select-choices repeat="sub_job.name as sub_job in quotation.sub_jobs">
+					    	{{sub_job.name}}
+					    </ui-select-choices>
+					</ui-select>
+				</div>
+				<div class="col-sm-4">
+					<button type="button" class="close pull-right" ng-click="deleteTab('coat', $index)">x</button>
+					<label class="control-label">ประเภท</label>
+					<!--input type="text" class="form-control" name="coats[{{$index}}][type]" ng-model="quotation.coats[$index].type"-->
+					<select class="form-control" name="coats[{{$index}}][type]" ng-model="quotation.coats[$index].type">
+    					<option ng-repeat="coatType in coatTypes">{{coatType}}</option>
+  					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<label class="control-label">จำนวนหน้า</label>
+					<input type="number" min="0" class="form-control" name="coats[{{$index}}][page]" ng-model="quotation.coats[$index].page">
+				</div>
+				<div class="col-sm-6">
+					<label class="control-label">หมายเหตุ</label>
+					<input type="text" min="0" class="form-control" name="coats[{{$index}}][comment]" ng-model="quotation.coats[$index].comment">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row col-sm-12" style="padding-top: 15px; padding-bottom: 15px;">
+		<button type="button" class="btn btn-warning pull-right" ng-click="addTab('coat')">+ เพิ่มเคลือบ</button>
+	</div>
+
+	<div class="row">
+		<div ng-repeat="diecut in quotation.diecuts" class="list-group-item col-sm-offset-2 col-sm-10">
+			<div class="row">
+				<div class="col-sm-8">
+					<label class="control-label">งานย่อย</label>
+					<input type="hidden" name="diecuts[{{$index}}][sub_jobs]" value="{{quotation.diecuts[$index].sub_jobs}}"></input>
+		    		<ui-select multiple ng-model="quotation.diecuts[$index].sub_jobs" close-on-select="false">
+					    <ui-select-match placeholder="เลือกงานย่อย">{{$item.name}}</ui-select-match>
+					    <ui-select-choices repeat="sub_job.name as sub_job in quotation.sub_jobs">
+					    	{{sub_job.name}}
+					    </ui-select-choices>
+					</ui-select>
+				</div>
+				<div class="col-sm-4">
+					<button type="button" class="close pull-right" ng-click="deleteTab('diecut', $index)">x</button>
+					<label class="control-label">ประเภท</label>
+					<!--input type="text" class="form-control" name="diecuts[{{$index}}][type]" ng-model="quotation.diecuts[$index].type"-->
+					<select class="form-control" name="diecuts[{{$index}}][type]" ng-model="quotation.diecuts[$index].type">
+    					<option ng-repeat="diecutType in diecutTypes">{{diecutType}}</option>
+  					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<label class="control-label">ขนาด</label>
+					<input type="text" min="0" class="form-control" name="diecuts[{{$index}}][size]" ng-model="quotation.diecuts[$index].size">
+				</div>
+				<div class="col-sm-6">
+					<label class="control-label">หมายเหตุ</label>
+					<input type="text" min="0" class="form-control" name="diecuts[{{$index}}][comment]" ng-model="quotation.diecuts[$index].comment">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row col-sm-12" style="padding-top: 15px; padding-bottom: 15px;">
+		<button type="button" class="btn btn-warning pull-right" ng-click="addTab('diecut')">+ เพิ่มปั๊ม</button>
+	</div>
+
+	<div class="row">
+		<div ng-repeat="fold in quotation.folds" class="list-group-item col-sm-offset-2 col-sm-10">
+			<div class="row">
+				<div class="col-sm-8">
+					<label class="control-label">งานย่อย</label>
+					<input type="hidden" name="folds[{{$index}}][sub_jobs]" value="{{quotation.folds[$index].sub_jobs}}"></input>
+		    		<ui-select multiple ng-model="quotation.folds[$index].sub_jobs" close-on-select="false">
+					    <ui-select-match placeholder="เลือกงานย่อย">{{$item.name}}</ui-select-match>
+					    <ui-select-choices repeat="sub_job.name as sub_job in quotation.sub_jobs">
+					    	{{sub_job.name}}
+					    </ui-select-choices>
+					</ui-select>
+				</div>
+				<div class="col-sm-4">
+					<button type="button" class="close pull-right" ng-click="deleteTab('fold', $index)">x</button>
+					<label class="control-label">รูปแบบ</label>
+					<input type="text" class="form-control" name="folds[{{$index}}][type]" ng-model="quotation.folds[$index].type">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<label class="control-label">หมายเหตุ</label>
+					<input type="text" min="0" class="form-control" name="folds[{{$index}}][comment]" ng-model="quotation.folds[$index].comment">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row col-sm-12" style="padding-top: 15px; padding-bottom: 15px;">
+		<button type="button" class="btn btn-warning pull-right" ng-click="addTab('fold')">+ เพิ่มพับ</button>
+	</div>
+
+	<div class="row">
+		<div ng-repeat="bind in quotation.binds" class="list-group-item col-sm-offset-2 col-sm-10">
+			<div class="row">
+				<div class="col-sm-8">
+					<label class="control-label">งานย่อย</label>
+					<input type="hidden" name="binds[{{$index}}][sub_jobs]" value="{{quotation.binds[$index].sub_jobs}}"></input>
+		    		<ui-select multiple ng-model="quotation.binds[$index].sub_jobs" close-on-select="false">
+					    <ui-select-match placeholder="เลือกงานย่อย">{{$item.name}}</ui-select-match>
+					    <ui-select-choices repeat="sub_job.name as sub_job in quotation.sub_jobs">
+					    	{{sub_job.name}}
+					    </ui-select-choices>
+					</ui-select>
+				</div>
+				<div class="col-sm-4">
+					<button type="button" class="close pull-right" ng-click="deleteTab('bind', $index)">x</button>
+					<label class="control-label">รูปแบบ</label>
+					<!--input type="text" class="form-control" name="binds[{{$index}}][type]" ng-model="quotation.binds[$index].type"-->
+					<select class="form-control" name="binds[{{$index}}][type]" ng-model="quotation.binds[$index].type">
+    					<option ng-repeat="bindType in bindTypes">{{bindType}}</option>
+  					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<label class="control-label">รายละเอียด</label>
+					<input type="text" min="0" class="form-control" name="binds[{{$index}}][description]" ng-model="quotation.binds[$index].description">
+				</div>
+				<div class="col-sm-6">
+					<label class="control-label">หมายเหตุ</label>
+					<input type="text" min="0" class="form-control" name="binds[{{$index}}][comment]" ng-model="quotation.binds[$index].comment">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row col-sm-12" style="padding-top: 15px; padding-bottom: 15px;">
+		<button type="button" class="btn btn-warning pull-right" ng-click="addTab('bind')">+ เพิ่มเข้าเล่ม</button>
+	</div>
+
+	<div class="form-group">        
+		<div class="col-sm-offset-2 col-sm-10">
+			<div class="input-group">
+				<button type="submit" class="btn btn-success" ng-if="!edit">Submit</button>
+				<button type="button" class="btn btn-info" ng-if="edit" ng-click="update()">Update</button>
+				<button type="button" class="btn btn-danger" ng-if="edit" ng-click="delete()">Delete</button>
+			</div>
+		</div>
+	</div>
+</form>

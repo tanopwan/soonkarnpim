@@ -1,0 +1,18 @@
+<div class="container">
+
+    <div class="col-sm-4">
+        
+        <div class="list-group-item text-success">
+            รายชื่อลูกค้า
+            <a class="new pull-right" ui-sref="customer.add">+</a>
+        </div>
+        
+        <a ng-repeat="customer in customers" ui-sref="customer.edit({key: customer._id})" class="list-group-item">
+            {{customer.name}}
+        </a>
+    </div>
+  
+    <div class="col-sm-8">
+        <div ui-view></div>
+    </div>
+</div>

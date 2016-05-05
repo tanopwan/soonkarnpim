@@ -1,0 +1,49 @@
+<div class="container-fluid">
+    <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a>E d i t . C u s t o m e r</a></li>
+    </ul>
+    <br>
+    <form role="form" action="/customers/:key" method="POST" id="customerForm">
+        <div class="form-group">
+            <label for="name">ชื่อลูกค้า:</label>
+            <input type="text" class="form-control"  name="name" value="{{edit.name}}"></input>
+        </div>
+
+        <div class="form-group">
+            <label for="contractor">ชื่อผู้ติดต่อ:</label>
+            <input type="text" class="form-control"  name="contractor" value="{{edit.contractor}}"></input>
+        </div>
+
+        <div class="form-group">
+            <label for="add1">ที่อยู่1:</label>
+            <input type="text" class="form-control"  name="add1" value="{{edit.add1}}"></input>
+        </div>
+
+        <div class="form-group">
+            <label for="add2">ที่อยู่2:</label>
+            <input type="text" class="form-control"  name="add2" value="{{edit.add2}}"></input>
+        </div>
+
+        <div class="form-group">
+            <label for="contact">ติดต่อ:</label>
+            <input type="text" class="form-control"  name="contact" value="{{edit.contact}}"></input>
+        </div>
+
+        <div class="form-group">
+            <label for="corp_id">เลขประจำตัวผู้เสียภาษี:</label>
+            <input type="text" class="form-control"  name="corp_id" value="{{edit.corp_id}}"></input>
+        </div>
+
+        <div class="form-group">
+            <label for="branch">สาขา:</label>
+            <input type="text" class="form-control" name="branch" value="{{edit.branch}}"></input>
+        </div>
+
+        <div class="form-group">
+            <label for="payment">เงื่อนไขการชำระเงิน</label>
+            <input type="text" class="form-control" name="payment" value="{{edit.payment}}"></input>
+        </div>
+
+        <button type="button" class="btn btn-info" ng-click="update()">Update</button>
+    </form>
+</div>
