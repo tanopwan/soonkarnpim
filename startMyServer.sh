@@ -11,7 +11,6 @@ then
 	echo "[COMPLETE] kill process mongod & node" 
 fi
 
-git remode add origin https://github.com/tanopwan/soonkarnpim.git
 git pull
 
 #START MONGOD
