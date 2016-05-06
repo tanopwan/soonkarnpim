@@ -1,5 +1,5 @@
 #!/bin/bash
-app_path=/Users/Nopwan/Soonkarnpim
+app_path=/Users/tanopwanMAC/soonkarnpim
 
 #Kill process before start MONGOD & NODE
 check_to_kill="$(ps aux| grep mongo | grep root)"
@@ -11,7 +11,7 @@ then
 	echo "[COMPLETE] kill process mongod & node" 
 fi
 
-git pull
+git pull origin master
 
 #START MONGOD
 sudo mongod&
