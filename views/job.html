@@ -1,0 +1,15 @@
+<div print-remove class="col-sm-4">
+
+    <div class="list-group-item text-success">
+        รายการงาน
+	</div>
+    <div class="list-group-item" ng-repeat="job in jobs">
+        <a ui-sref="job.view({key: job._id})">{{job.job_name}}</a>
+        <div class="pull-right">
+            <a ui-sref="job.edit({key: job._id})"><span class="glyphicon glyphicon-pencil"></a>
+        </div>
+    </div>
+
+</div>
+
+<div class="col-sm-8" ui-view></div>
