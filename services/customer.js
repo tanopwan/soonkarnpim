@@ -1,17 +1,15 @@
 var customersServices = angular.module('customer.services', ['ngResource']);
 	
 customersServices.factory('Customers',['$resource', function($resource) {
-	var customers = $resource('/customers', null, null);
+	//var customers = $resource('/customers', null, null);
 
-	var customer = $resource('/customers/:key', null, {
-		'post': {method:'POST'},
-		'update': {method:'PUT'},
-		'get': {method: 'GET'},
-		'delete': {method:'DELETE'}
+	var customer = $resource('/customers', null, {
+		'list': {method:'GET', isArray: true},
+		'get': {method: 'GET', params: {key: '@key'}},
 	});
 
 	return {
-		customers: customers,
+		//customers: customers,
 		customer: customer
 	};
 }]);

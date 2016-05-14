@@ -19,11 +19,14 @@
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 
     <script src="services/customer.js"></script>
+    <script src="services/quotation.js"></script>
+    <script src="services/job.js"></script>
 
     <script src="controllers/customer.js"></script>
     <script src="controllers/quotation.js"></script>
     <script src="controllers/quotation-add.js"></script>
     <script src="controllers/quotation-print.js"></script>
+    <script src="controllers/job.js"></script>
     
     <script src="app_route.js"></script>
 </head>
@@ -33,9 +36,9 @@
             <ul class="nav nav-pills">
                 <li ui-sref-active="active"><a ui-sref="customer">C u s t o m e r</a></li>
                 <li ui-sref-active="active"><a ui-sref="quotation">Q u o t a t i o n</a></li>
+                <li ui-sref-active="active"><a ui-sref="job">J o b</a></li>
             </ul>
         </div>
-  
         <div class="col-sm-12">
             <div ui-view></div>
         </div>

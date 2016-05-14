@@ -6,7 +6,10 @@ var app = angular.module('soonkarnpimApp', [
   'ui.router',
   'customer.app',
   'customer.services',
-  'quotation.app'
+  'quotation.app',
+  'quotation.services',
+  'job.app',
+  'job.services'
 ]);
 
 app.config(function($stateProvider, $urlRouterProvider){
@@ -48,6 +51,21 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: "controller.quotation.add.edit"
         })
         .state('quotation.view', {
+            url: "/view/:key",
+            templateUrl: "views/quotation-print-template.html",
+            controller: "controller.quotation.print"
+        })
+        .state('job', {
+            url: "/job",
+            templateUrl: "views/job.html",
+            controller: "controller.job.list"
+        })
+        .state('job.edit', {
+            url: "/edit/:key",
+            templateUrl: "views/quotation-form.html",
+            controller: "controller.quotation.add.edit"
+        })
+        .state('job.view', {
             url: "/view/:key",
             templateUrl: "views/quotation-print-template.html",
             controller: "controller.quotation.print"

@@ -1,4 +1,4 @@
-quotationApp.controller('controller.quotation.add.edit', function ($scope, $http, $location, $window, $stateParams, QuotationService, Customers, DataList) {
+quotationApp.controller('controller.quotation.add.edit', function ($scope, $http, $location, $window, $state, $stateParams, QuotationService, Customers, DataList) {
 	console.log("controller.quotation.add.edit");
 	$scope.edit = false;
 	$scope.editHeader = "A d d . Q u o t a t i o n";
@@ -14,7 +14,6 @@ quotationApp.controller('controller.quotation.add.edit', function ($scope, $http
 			$scope.quotation.quantity = parseInt(data.quantity) || "";
 			$scope.quotation.total_baht = parseInt(data.total_baht) || "";
 			$scope.quotation.total_satang = parseInt(data.total_satang) || "";
-			//$scope.quotation.each_baht = parseInt(data.each_baht) || "";
 			$scope.quotation.each_satang = parseInt(data.each_satang) || "";
 			$scope.quotation.term = data.term || "ยืนยันราคา 30 วัน";
 
@@ -82,7 +81,7 @@ quotationApp.controller('controller.quotation.add.edit', function ($scope, $http
 		});
 	}
 
-	Customers.customers.query().$promise.then(function(data) {
+	Customers.customer.list().$promise.then(function(data) {
 		$scope.customers = data;
 	});
 
@@ -160,7 +159,7 @@ quotationApp.controller('controller.quotation.add.edit', function ($scope, $http
 		console.log("delete");
 		QuotationService.quotation.delete({key: quotation_id}).$promise.then(function(data) {
 			//$window.location.href = '/quotation.html';
-			$state.go('quotation');
+			$state.go('quotation', {}, { reload: true });
 		});
 	}
 

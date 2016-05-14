@@ -2,7 +2,7 @@ var customerApp = angular.module('customer.app', ['ui.router']);
 
 customerApp.controller('controller.customer.list',
 	function($scope, Customers) {
-		$scope.customers = Customers.customers.query();
+		$scope.customers = Customers.customer.list();
         console.log("controller.customer.list retrieved customer list");
 	});
 

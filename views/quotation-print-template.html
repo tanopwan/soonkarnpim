@@ -1,7 +1,52 @@
 
 <div print-remove class="page-header">
-    <button print-btn class="btn btn-success pull-right"><span class="glyphicon glyphicon-print"></button>
-    <div class="btn-group">
+    <div class="pull-right">
+        <button ng-if="quotation.status != 'accept'" data-toggle="modal" data-target="#acceptJobModal" class="btn btn-success">
+            รับงาน <span class="glyphicon glyphicon-send">
+        </button>
+        <div class="modal fade" id="acceptJobModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">กรุณาเลือกราคา</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" ng-if="sum_mode == 'none'">
+                            <label for="sel1">ราคาย่อย {{modal.selectPrice}}</label>
+                            <select class="form-control" name="selectPrice" ng-model="modal.selectPrice">
+                                <option ng-repeat="price in quotation.sub_prices" value="{{$index}}">
+                                    จำนวน {{price.quantity}} - ราคา {{price.total_baht_str}}.{{price.total_satang}} บาท - 
+                                    {{vat_mode}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group" ng-if="sum_mode == 'auto'">
+                            <label for="sel1">ราคารวมจากงานย่อย</label>
+                            <ul>
+                                <li>ราคา {{sub_total_baht}}.{{sub_total_satang}}</li>
+                                <li>ภาษีมูลค่าเพิ่ม {{vat_baht}}.{{vat_satang}}</li>
+                                <li>รวม {{total_baht}}.{{total_satang}}</li>
+                            </ul>
+                        </div>
+                        <div class="form-group" ng-if="sum_mode == 'input'">
+                            <label for="sel1">ราคาจากใบเสนอราคา</label>
+                            <ul>
+                                <li>ราคา {{sub_total_baht}}.{{sub_total_satang}}</li>
+                                <li>ภาษีมูลค่าเพิ่ม {{vat_baht}}.{{vat_satang}}</li>
+                                <li>รวม {{total_baht}}.{{total_satang}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" ng-click="acceptQuotation()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button print-btn class="btn btn-success"><span class="glyphicon glyphicon-print"></button>
+    </div>
+    <div class="btn-group" ng-hide="quotation.status == 'accept'">
         <label class="btn btn-primary" ng-model="sum_mode" uib-btn-radio="'none'">ไม่แสดงราคารวม</label>
         <label class="btn btn-primary" ng-model="sum_mode" uib-btn-radio="'auto'" ng-disabled="enableAutosum">รวมราคางานย่อย</label>
         <label class="btn btn-primary" ng-model="sum_mode" uib-btn-radio="'input'" ng-disabled="enableSubprices0">ใช้ราคาหลักจากใบเสนอราคา</label>
@@ -86,19 +131,19 @@
                     </div>
                 </div>
                 <div class="col-xs-2 col-xs-height addleftborder addtopborder">
-                    <div class="row row-xs-height" ng-repeat="price in quotation.sub_prices" ng-if="!hasSubPrices(price)">
+                    <div class="row row-xs-height" ng-repeat="price in quotation.sub_prices" ng-if="hasSubPrices($index)">
                         <div class="col-xs-12 col-xs-height"></div>
                         <span class="pull-right">{{price.quantity}}</span>
                     </div>
                 </div>
                 <div class="col-xs-2 col-xs-height addleftborder addtopborder">
-                   <div class="row row-xs-height" ng-repeat="price in quotation.sub_prices" ng-if="!hasSubPrices(price)">
+                   <div class="row row-xs-height" ng-repeat="price in quotation.sub_prices" ng-if="hasSubPrices($index)">
                         <div class="col-xs-12 col-xs-height"></div>
                         <span class="pull-right" ng-if="price.each_show">{{price.each_baht_str}}.{{price.each_satang}}</span>
                     </div>
                 </div>
                 <div class="col-xs-2 col-xs-height addleftborder addrightborder addtopborder">
-                   <div class="row row-xs-height" ng-repeat="price in quotation.sub_prices" ng-if="!hasSubPrices(price)"> 
+                   <div class="row row-xs-height" ng-repeat="price in quotation.sub_prices" ng-if="hasSubPrices($index)"> 
                         <div class="col-xs-12 col-xs-height"></div>
                         <span class="pull-right" ng-if="price.total_show">{{price.total_baht_str}}.{{price.total_satang}}</span>
                     </div>

@@ -1,24 +1,45 @@
 
-quotationApp.controller('controller.quotation.print', function($scope, $stateParams, QuotationService, Customers) {
+quotationApp.controller('controller.quotation.print', function($scope, $state, $stateParams, $httpParamSerializer, QuotationService, Customers) {
 
 	var quotation_id = $stateParams.key;
+	$scope.modal = {};
 
-	$scope.sum_mode = "none";
+	$scope.acceptQuotation = function () {
+		var data = {key: quotation_id};
+		if ($scope.sum_mode == 'none') {
+			data = {key: quotation_id, select_price: $scope.modal.selectPrice}
+		}
+		QuotationService.quotation.accept($httpParamSerializer(data)).$promise.then(function(data) {
+			$('#acceptJobModal').modal('hide');
+			$('.modal-backdrop').hide();
+			$state.go('job', {}, { reload: true });
+		});
+	};
+
+
 	$scope.$watch('sum_mode', function(newValue, oldValue) {
 		if ($scope.quotation) {
 			calculate();
+			if (oldValue) { // Prevent first time Post
+				QuotationService.option.save_sum_mode({key: quotation_id}, $httpParamSerializer({sum_mode: newValue})).$promise.then(function(data) {
+					console.log("sum_mode saved");
+				});	
+			}
 		}
 	});
 
-	$scope.vat_mode = "vat";
 	$scope.$watch('vat_mode', function(newValue, oldValue) {
 		if ($scope.quotation) {
 			calculate();
+			if (oldValue) { // Prevent first time Post
+				QuotationService.option.save_vat_mode({key: quotation_id}, $httpParamSerializer({vat_mode: newValue})).$promise.then(function(data) {
+					console.log("vat_mode saved");
+				});
+			}
 		}
 	});
 
 	QuotationService.quotation.get({key: quotation_id}).$promise.then(function(data) {
-		console.log(data);
 		$scope.quotation = data
 		calculate();
 		var monthNamesThai = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤษจิกายน","ธันวาคม"];
@@ -26,6 +47,25 @@ quotationApp.controller('controller.quotation.print', function($scope, $statePar
 		var d = new Date($scope.quotation.job_date);
 		$scope.date_string = d.getDate() + " " + monthNamesThai[d.getMonth()] + "  " + d.getFullYear();
 
+		if($scope.quotation.sum_mode) {
+			$scope.sum_mode = $scope.quotation.sum_mode;
+		}
+		else {
+			$scope.sum_mode = "none";
+			QuotationService.option.save_sum_mode({key: quotation_id}, $httpParamSerializer({sum_mode: $scope.sum_mode})).$promise.then(function(data) {
+				console.log("sum_mode saved");
+			});	
+		}
+
+		if($scope.quotation.vat_mode) {
+			$scope.vat_mode = $scope.quotation.vat_mode;
+		}
+		else {
+			$scope.vat_mode = "vat";
+			QuotationService.option.save_vat_mode({key: quotation_id}, $httpParamSerializer({vat_mode: $scope.vat_mode})).$promise.then(function(data) {
+				console.log("vat_mode saved");
+			});
+		}
 	}).then(function() {
 		var customer_id = $scope.quotation.customer_id;
 		if (customer_id != "? undefined:undefined ?") {
@@ -35,15 +75,17 @@ quotationApp.controller('controller.quotation.print', function($scope, $statePar
 		}
 	});
 
-	$scope.hasSubPrices = function(object){
-		if (object.sub_prices == null || object.sub_prices.length <= 0){
+	$scope.hasSubPrices = function(index){
+		if ($scope.quotation.select_price >= 0) {
+
+			if (index == $scope.quotation.select_price) {
+				return true;
+			}
 			return false;
 		}
-		var sub_prices = JSON.parse(object.sub_prices);
-		if (sub_prices != null && sub_prices.length > 0) {
+		else {
 			return true;
 		}
-		return false;
 	}
 
 	$scope.hasSubJobs = function(object) {
@@ -128,6 +170,7 @@ quotationApp.controller('controller.quotation.print', function($scope, $statePar
 		}
 
 		var sum_mode = $scope.sum_mode;
+		var none_selected_mode = sum_mode == "none" && $scope.quotation.status == "accept" && $scope.quotation.select_price && $scope.quotation.sub_prices[$scope.quotation.select_price];
 		if (sum_mode == "auto") {
 			$scope.sub_total_baht = 0;
 			$scope.sub_total_satang = 0;
@@ -145,7 +188,14 @@ quotationApp.controller('controller.quotation.print', function($scope, $statePar
 			$scope.sub_total_satang = $scope.quotation.sub_prices[0].total_satang;
 			$scope.sub_total_baht_str = $scope.sub_total_baht.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		}
+		else if (none_selected_mode) {
+			console.log("None mode : select_price at index " + $scope.quotation.select_price);
+			$scope.sub_total_baht = $scope.quotation.sub_prices[$scope.quotation.select_price].total_baht;
+			$scope.sub_total_satang = $scope.quotation.sub_prices[$scope.quotation.select_price].total_satang;
+			$scope.sub_total_baht_str = $scope.sub_total_baht.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
 		else {
+			console.log("Default mode sum_mode[" + sum_mode + "] status[" + $scope.quotation.status + "] select_price[" + $scope.quotation.select_price + "]");
 			$scope.sub_total_baht = "-";
 			$scope.sub_total_satang = "-";
 			$scope.vat_baht = "-";
